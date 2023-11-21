@@ -12,3 +12,4 @@ export default pinia
 
 // 模块统⼀导出
 export * from './modules/member'
+export * from './modules/address'
