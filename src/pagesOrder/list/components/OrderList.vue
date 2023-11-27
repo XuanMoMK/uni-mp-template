@@ -16,10 +16,11 @@ const queryParams: Required<OrderListParams> = {
   orderType: props.orderState
 }
 
-// 获取订单列表
-const orderList = ref<OrderItem[]>([])
 // 是否加载中标记，⽤于防⽌滚动触底触发多次请求
 const isLoading = ref(false)
+
+// 获取订单列表
+const orderList = ref<OrderItem[]>([])
 const getMemberOrderData = async () => {
   // 如果数据出于加载中，退出函数
   if (isLoading.value) return
@@ -35,7 +36,6 @@ const getMemberOrderData = async () => {
   isLoading.value = false
   // 数组追加
   orderList.value.push(...res.result.list)
-  console.log(orderList.value)
   // 分⻚条件
   if (queryParams.page < res.result.pages) {
     // ⻚码累加
@@ -45,7 +45,6 @@ const getMemberOrderData = async () => {
     isFinish.value = true
   }
 }
-
 onMounted(() => {
   getMemberOrderData()
 })
@@ -76,7 +75,7 @@ const onOrderPay = async (id: string) => {
 // 确认收货
 const onOrderConfirm = (id: string) => {
   uni.showModal({
-    content: '为保障您的权益，请收到货并确认⽆误后，再确认收货',
+    content: '为保障您的权益，请收到货并确认无误后，再确认收货',
     confirmColor: '#27BA9B',
     success: async (res) => {
       if (res.confirm) {
@@ -124,7 +123,6 @@ const onRefresherrefresh = async () => {
   isTriggered.value = false
 }
 </script>
-
 <template>
   <scroll-view
     enable-back-to-top
@@ -157,7 +155,7 @@ const onRefresherrefresh = async () => {
         hover-class="none"
       >
         <view class="cover">
-          <image class="image" mode="aspectFit" :src="item.cover"></image>
+          <image class="image" mode="aspectFit" :src="item.cover" />
         </view>
         <view class="meta">
           <view class="name ellipsis">{{ item.name }}</view>
@@ -168,7 +166,7 @@ const onRefresherrefresh = async () => {
       <view class="payment">
         <text class="quantity">共{{ order.totalNum }}件商品</text>
         <text>实付</text>
-        <text class="amount"> <text class="symbol">¥</text>{{ order.payMoney }}</text>
+        <text class="amount"><text class="symbol">¥</text>{{ order.payMoney }}</text>
       </view>
       <!-- 订单操作按钮 -->
       <view class="action">
@@ -201,9 +199,8 @@ const onRefresherrefresh = async () => {
     </view>
   </scroll-view>
 </template>
-
-<style lang="scss" scoped>
-//订单列表
+<style lang="scss">
+// 订单列表
 .orders {
   .card {
     min-height: 100rpx;
@@ -218,7 +215,7 @@ const onRefresherrefresh = async () => {
   .status {
     display: flex;
     align-items: center;
-    justify-content: space between;
+    justify-content: space-between;
     font-size: 28rpx;
     color: #999;
     margin-bottom: 15rpx;
@@ -246,50 +243,95 @@ const onRefresherrefresh = async () => {
       border-radius: 10rpx;
       overflow: hidden;
       position: relative;
+      .image {
+        width: 170rpx;
+        height: 170rpx;
+      }
+    }
+    .quantity {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      line-height: 1;
+      padding: 6rpx 4rpx 6rpx 8rpx;
+      font-size: 24rpx;
+      color: #fff;
+      border-radius: 10rpx 0 0 0;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .meta {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .name {
+      height: 80rpx;
+      font-size: 26rpx;
+      color: #444;
+    }
+    .type {
+      line-height: 1.8;
+      padding: 0 15rpx;
+      margin-top: 10rpx;
+      font-size: 24rpx;
+      align-self: flex-start;
+      border-radius: 4rpx;
+      color: #888;
+      background-color: #f7f7f8;
+    }
+    .more {
+      flex: 1;
+      display: flex;
+      align-items: center;
     }
   }
 
-  .quantity {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    line-height: 1;
-    padding: 6rpx 4rpx 6rpx 8rpx;
-    font-size: 24rpx;
-    color: #fff;
-    border-radius: 10rpx 0 0 0;
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-
-  .meta {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .name {
-    height: 80rpx;
+  .payment {
     font-size: 26rpx;
-    color: #444;
-  }
-  .type {
-    line-height: 1.8;
-    padding: 0 15rpx;
-    margin-top: 10rpx;
-    font-size: 24rpx;
-    align-self: flex-start;
-    border-radius: 4rpx;
-    color: #888;
-    background-color: #f7f7f8;
+    color: #999;
+    margin-bottom: 20rpx;
+
+    .quantity {
+      margin-right: 10rpx;
+      font-size: 26rpx;
+    }
+
+    .amount {
+      color: #444;
+      font-size: 28rpx;
+      margin-left: 5rpx;
+    }
   }
 
-  .more {
-    flex: 1;
+  .action {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22rpx;
-    color: #333;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    padding: 20rpx 0 0;
+    border-top: 1rpx solid #e3e3e3;
+    // background-color: yellow;
+
+    .button {
+      width: 200rpx;
+      height: 60rpx;
+      text-align: center;
+      justify-content: center;
+      line-height: 60rpx;
+      margin-left: 20rpx;
+      border-radius: 60rpx;
+      border: 1rpx solid #ccc;
+      font-size: 26rpx;
+      color: #444;
+    }
+    .secondary {
+      color: #27ba9b;
+      border-color: #27ba9b;
+    }
+    .primary {
+      color: #fff;
+      background-color: #27ba9b;
+    }
   }
 }
 </style>

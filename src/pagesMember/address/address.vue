@@ -28,9 +28,9 @@ const onDeleteAddress = (id: string) => {
   })
 }
 
-//修改收货地址
+// 修改收货地址
 const onChangeAddress = (item: AddressItem) => {
-  //修改选中收货地址
+  // 修改选中的收货地址
   const addressStore = useAddressStore()
   addressStore.changeSelectedAddress(item)
   uni.navigateBack()
@@ -45,7 +45,7 @@ const onChangeAddress = (item: AddressItem) => {
         <uni-swipe-action class="address-list">
           <!-- 收货地址项 -->
           <uni-swipe-action-item class="item" v-for="item in addressList" :key="item.id">
-            <view class="item-content" @tap="onChangeAddress">
+            <view class="item-content" @tap="onChangeAddress(item)">
               <view class="user">
                 {{ item.receiver }}
                 <text class="contact">{{ item.contact }}</text>
